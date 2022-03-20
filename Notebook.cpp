@@ -13,22 +13,22 @@ Page::Page() : numOfRows(0), maxRowLength(0) {};
 Notebook::Notebook() : numOfPages(0) {};
 /* constructors */
 
-void Notebook::write(unsigned int page, unsigned int row, unsigned int column, ariel::Direction direction,string str)
+void Notebook::write(unsigned int page, unsigned int row, unsigned int column, ariel::Direction direction,const string& str)
 {
     Page& p = this->pages.at(page);
     if(direction==Direction::Horizontal)
     {
-        p.rows.at(row).replace(column,column+str.length(), str);
+        p.rows.at(row).replace(column,str.length(), str);
     }
     else
     {
         unsigned int length = str.length();
         for (unsigned int i = 0; i < length; i++)
         {
-            // p.rows.at(row+i).replace(column,1,str.at(i));
+            string tmp(1,str.at(i));
+            p.rows.at(row+i).replace(column,1,tmp);
         }
     }
-    
 }
 
 string Notebook::read(unsigned int page, unsigned int row, unsigned int column, ariel::Direction direction, unsigned int length)
@@ -51,7 +51,7 @@ string Notebook::read(unsigned int page, unsigned int row, unsigned int column, 
 
 void Notebook::show(unsigned int index)
 {
-    int numOfRows = this->pages.at(index).numOfRows;
+    unsigned int numOfRows = this->pages.at(index).numOfRows;
     string final;
     for (unsigned int i = 0; i < numOfRows; i++)
     {

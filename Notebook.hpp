@@ -1,6 +1,7 @@
 #pragma once
 #include <unordered_map>
 #include <string>
+#include "Direction.hpp"
 
 namespace ariel
 {
@@ -24,9 +25,9 @@ namespace ariel
 
         public:
             Notebook();
-            void write(unsigned int page, unsigned int row, unsigned int column, ariel::Direction direction, std::string str);
-            std::string read(unsigned int page, unsigned int row, unsigned int column, ariel::Direction direction, unsigned int length);
-            void erase(unsigned int page, unsigned int row, unsigned int column, ariel::Direction direction, unsigned int length);
+            void write(unsigned int page, unsigned int row, unsigned int column, Direction direction, const std::string& str);
+            std::string read(unsigned int page, unsigned int row, unsigned int column, Direction direction, unsigned int length);
+            void erase(unsigned int page, unsigned int row, unsigned int column, Direction direction, unsigned int length);
             void show(unsigned int index);
     };
 }
