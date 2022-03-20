@@ -1,6 +1,5 @@
-
 #pragma once
-#include <vector>
+#include <unordered_map>
 #include <string>
 
 namespace ariel
@@ -8,26 +7,26 @@ namespace ariel
     class Page
     {
         private:
-            int numOfRows;
-            std::vector<std::string> rows;
+            unsigned int numOfRows;
+            unsigned int maxRowLength;
+            std::unordered_map<unsigned int,std::string> rows;
 
         public:
-            std::string getRow();
-            void editRow();
+            Page();
+            friend class Notebook;
     };
 
     class Notebook
     {
         private:
-            int numOfPages;
-            std::vector<Page> pages;
+            unsigned int numOfPages;
+            std::unordered_map<unsigned int,Page> pages;
 
         public:
-            /* ***** */
-            void write(int page, int row, int column, ariel::Direction direction, std::string str);
-            std::string read(int page, int row, int column, ariel::Direction direction, int length);
-            void erase(int page, int row, int column, ariel::Direction direction, int length);
-            void show(int page);
-            /* ***** */
+            Notebook();
+            void write(unsigned int page, unsigned int row, unsigned int column, ariel::Direction direction, std::string str);
+            std::string read(unsigned int page, unsigned int row, unsigned int column, ariel::Direction direction, unsigned int length);
+            void erase(unsigned int page, unsigned int row, unsigned int column, ariel::Direction direction, unsigned int length);
+            void show(unsigned int index);
     };
 }
