@@ -48,6 +48,10 @@ string Notebook::read(unsigned int page, unsigned int row, unsigned int column, 
     return final;
 }
 
+void Notebook::erase(unsigned int page, unsigned int row, unsigned int column, ariel::Direction direction, unsigned int length)
+{
+    return;
+}
 
 void Notebook::show(unsigned int index)
 {

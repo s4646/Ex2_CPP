@@ -1,6 +1,6 @@
 #include "doctest.h"
-#include "Notebook.hpp";
-#include "Direction.hpp";
+#include "Notebook.hpp"
+#include "Direction.hpp"
 
 using namespace ariel;
 
