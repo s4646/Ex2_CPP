@@ -5,15 +5,16 @@
 
 namespace ariel
 {
+    const unsigned int rowLength = 100;
     class Page
     {
         private:
             unsigned int numOfRows;
-            unsigned int maxRowLength;
             std::unordered_map<unsigned int,std::string> rows;
 
         public:
             Page();
+            
             friend class Notebook;
     };
 
