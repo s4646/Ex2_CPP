@@ -71,6 +71,13 @@ string Notebook::read(unsigned int page, unsigned int row, unsigned int column, 
     {
         for (unsigned int i = 0; i < length; i++)
         {
+            // row does not exist
+            if(this->pages.at(page).rows.find(row+i)==this->pages.at(page).rows.end())
+            {
+                string newRow(rowLength,'_');
+                this->pages.at(page).rows.insert({row+i,newRow});
+                this->pages.at(page).numOfRows = this->pages.at(page).rows.size();
+            }
             final += this->pages.at(page).rows.at(row+i).at(column);
         }
     }
@@ -98,11 +105,30 @@ void Notebook::erase(unsigned int page, unsigned int row, unsigned int column, a
 
 void Notebook::show(unsigned int index)
 {
+    // find the max row
+    Page& p = this->pages.at(index);
+    unsigned int maxPage = 0;
+    for (const auto& Pair : p.rows)
+    {
+        if(maxPage < Pair.first)
+        {
+            maxPage = Pair.first;
+        }
+    }
     unsigned int numOfRows = this->pages.at(index).numOfRows;
     string final;
-    for (unsigned int i = 0; i < numOfRows; i++)
+    for (unsigned int i = 0; i < maxPage + 2; i++)
     {
-        final += this->pages.at(index).rows.at(i) + "\n";
+        // row does not exist or empty page
+        if(this->pages.at(index).rows.find(i)==this->pages.at(index).rows.end())
+        {
+            string newRow(rowLength,'_');
+            final += std::to_string(i) + "\t: " + newRow + "\n";
+        }
+        else
+        {
+            final += std::to_string(i) + "\t: " + this->pages.at(index).rows.at(i) + "\n";
+        }
     }
     if(!final.empty())
     {
