@@ -30,10 +30,10 @@ TEST_CASE("WRITE")
     CHECK_NOTHROW(notebook.write(0,9,0,Direction::Vertical,"abcd"));
     CHECK_NOTHROW(notebook.write(0,13,0,Direction::Vertical,"abcd"));
     /*page 1*/
-    CHECK_NOTHROW(notebook.write(1,4,16,Direction::Vertical,"!@#$"));
-    CHECK_NOTHROW(notebook.write(1,8,16,Direction::Vertical,"!@#$"));
-    CHECK_NOTHROW(notebook.write(1,12,16,Direction::Vertical,"!@#$"));
-    CHECK_NOTHROW(notebook.write(1,16,16,Direction::Vertical,"!@#$"));
+    CHECK_NOTHROW(notebook.write(1,3,16,Direction::Vertical,"!@#$"));
+    CHECK_NOTHROW(notebook.write(1,7,16,Direction::Vertical,"!@#$"));
+    CHECK_NOTHROW(notebook.write(1,11,16,Direction::Vertical,"!@#$"));
+    CHECK_NOTHROW(notebook.write(1,15,16,Direction::Vertical,"!@#$"));
 
     // Diangonal writing
     /*page 0*/
@@ -42,10 +42,10 @@ TEST_CASE("WRITE")
     CHECK_NOTHROW(notebook.write(0,3,5,Direction::Horizontal,"abc"));
     CHECK_NOTHROW(notebook.write(0,4,8,Direction::Horizontal,"abcd"));
     /*page 1*/
-    CHECK_NOTHROW(notebook.write(1,8,0,Direction::Horizontal,"!"));
+	CHECK_NOTHROW(notebook.write(1,8,0,Direction::Horizontal,"!"));
     CHECK_NOTHROW(notebook.write(1,9,1,Direction::Horizontal,"!@"));
     CHECK_NOTHROW(notebook.write(1,10,3,Direction::Horizontal,"!@#"));
-    CHECK_NOTHROW(notebook.write(1,11,5,Direction::Horizontal,"!@#$"));
+    CHECK_NOTHROW(notebook.write(1,11,6,Direction::Horizontal,"!@#$"));
 
     // Art
     /* page 2 */
@@ -59,8 +59,8 @@ TEST_CASE("WRITE")
     CHECK_NOTHROW(notebook.write(2,7,0,Direction::Horizontal,"0000      0000___0000      0000___     7777"));
     CHECK_NOTHROW(notebook.write(2,8,0,Direction::Horizontal,"_000      000_____000      000____    7777"));
     CHECK_NOTHROW(notebook.write(2,9,0,Direction::Horizontal,"__000    000_______000    000_____  77777"));
-    CHECK_NOTHROW(notebook.write(2,10,0,Direction::Horizontal,"__00000000_________00000000______ 7777777"));
-    CHECK_NOTHROW(notebook.write(2,11,0,Direction::Horizontal,"___ 0000_____________0000________777777777"));
+    CHECK_NOTHROW(notebook.write(2,10,0,Direction::Horizontal,"___00000000_________00000000______ 7777777"));
+    CHECK_NOTHROW(notebook.write(2,11,0,Direction::Horizontal,"_____0000_____________0000________777777777"));
     /*page 3*/
     /* 
     ___..eeeee..___
@@ -75,7 +75,7 @@ TEST_CASE("WRITE")
     CHECK_NOTHROW(notebook.write(3,0,8,Direction::Horizontal,"ee.."));
     
     CHECK_NOTHROW(notebook.write(3,1,1,Direction::Horizontal,"e8\""));
-    CHECK_NOTHROW(notebook.write(3,1,8,Direction::Horizontal,"\"8e"));
+    CHECK_NOTHROW(notebook.write(3,1,12,Direction::Horizontal,"\"8e"));
 
     CHECK_NOTHROW(notebook.write(3,2,0,Direction::Horizontal,"d8"));
     CHECK_NOTHROW(notebook.write(3,2,13,Direction::Horizontal,"8b"));
@@ -113,7 +113,7 @@ TEST_CASE("READ")
     CHECK(notebook.read(1,10,3,Direction::Horizontal,3) == "!@#");
     /*page 2*/
     CHECK(notebook.read(2,0,5,Direction::Horizontal,5) == "0000_");
-    CHECK(notebook.read(2,2,19,Direction::Horizontal,30) == "000    000_____777       7777");
+    CHECK(notebook.read(2,2,19,Direction::Horizontal,29) == "000    000_____777       7777");
 
     // Read vertically
     /*page 0*/
@@ -124,10 +124,10 @@ TEST_CASE("READ")
     /*page 1*/
     CHECK(notebook.read(1,2,16,Direction::Vertical,4) == "_!@#");
     CHECK(notebook.read(1,7,16,Direction::Vertical,1) =="!");
-    CHECK(notebook.read(1,8,16,Direction::Vertical,2) == "!@");
-    CHECK(notebook.read(1,10,16,Direction::Vertical,3) == "!@#");
+    CHECK(notebook.read(1,8,16,Direction::Vertical,2) == "@#");
+    CHECK(notebook.read(1,10,16,Direction::Vertical,3) == "$!@");
     /*page 2*/
-    CHECK(notebook.read(2,5,0,Direction::Vertical,5) == "0000_");
+    CHECK(notebook.read(2,5,0,Direction::Vertical,5) == "000__");
     CHECK(notebook.read(2,9,5,Direction::Vertical,3) == " 00");
 }
 
