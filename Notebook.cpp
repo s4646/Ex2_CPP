@@ -115,7 +115,6 @@ void Notebook::show(unsigned int index)
             maxPage = Pair.first;
         }
     }
-    unsigned int numOfRows = this->pages.at(index).numOfRows;
     string final;
     for (unsigned int i = 0; i < maxPage + 2; i++)
     {
