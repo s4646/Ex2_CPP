@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include <string>
 #include <limits>
+#include <stdexcept>
 #include "Notebook.hpp"
 #include "Direction.hpp"
 
@@ -11,24 +12,28 @@ using namespace ariel;
 
 
 /* constructors */
-Page::Page() : numOfRows(0) {};
+Page::Page() {};
 
-Notebook::Notebook() : numOfPages(0) {};
+Notebook::Notebook() {};
 /* constructors */
 
 void Notebook::write(int page, int row, int column, ariel::Direction direction,const string& str)
 {
-    // str exceeds the row's length
-    if((size_t)column+str.size()>rowLength)
+    // invalid argument received
+    if(page < 0 || row < 0 || column < 0)
     {
-        throw "writing out of row's bounds";
+        throw invalid_argument("negative input cannot be processed");
+    }
+    // str exceeds the row's length
+    if((size_t)column+str.size()>rowLength && direction==Direction::Horizontal)
+    {
+        throw runtime_error("writing out of row's bounds");
     }
     // page does not exist
     if(this->pages.find(page)==this->pages.end())
     {
         Page newPage;
         this->pages.insert({page,newPage});
-        this->numOfPages = this->pages.size();
     }
 
     Page& p = this->pages.at(page);
@@ -39,14 +44,13 @@ void Notebook::write(int page, int row, int column, ariel::Direction direction,c
         {
             string newRow(rowLength,'_');
             p.rows.insert({row,newRow});
-            p.numOfRows = p.rows.size();
         }
         string emptyStr(str.length(),'_');
         
         // check that chars to write are not empty
         if(p.rows.at(row).substr((size_t)column,str.length()) != emptyStr)
         {
-            throw "writing intersection";
+            throw runtime_error("writing intersection");
         }
         // write horizontally
         p.rows.at(row).replace((size_t)column,str.length(), str);
@@ -76,7 +80,6 @@ void Notebook::write(int page, int row, int column, ariel::Direction direction,c
             {
                 string newRow(rowLength,'_');
                 p.rows.insert({row+i,newRow});
-                p.numOfRows = p.rows.size();
             }
             string tmp(1,str.at((size_t)i));
             p.rows.at(row+i).replace((size_t)column,1,tmp);
@@ -86,6 +89,16 @@ void Notebook::write(int page, int row, int column, ariel::Direction direction,c
 
 string Notebook::read(int page, int row, int column, ariel::Direction direction, int length)
 {
+    // invalid argument received
+    if(page < 0 || row < 0 || column < 0)
+    {
+        throw invalid_argument("negative input cannot be processed");
+    }
+    // str exceeds the row's length
+    if((size_t)column+(size_t)length>rowLength && direction==Direction::Horizontal)
+    {
+        throw runtime_error("reading out of row's bounds");
+    }
     string final;
     Page& p = this->pages.at(page);
     if(direction==Direction::Horizontal)
@@ -112,6 +125,11 @@ string Notebook::read(int page, int row, int column, ariel::Direction direction,
 
 void Notebook::erase(int page, int row, int column, ariel::Direction direction, int length)
 {
+    // invalid argument received
+    if(page < 0 || row < 0 || column < 0)
+    {
+        throw invalid_argument("negative input cannot be processed");
+    }
     // str exceeds the row's length
     if((size_t)column+(size_t)length>rowLength && direction==Direction::Horizontal)
     {
@@ -125,7 +143,6 @@ void Notebook::erase(int page, int row, int column, ariel::Direction direction, 
             {
                 string newRow(rowLength,'_');
                 this->pages.at(page).rows.insert({row,newRow});
-                this->pages.at(page).numOfRows = this->pages.at(page).rows.size();
             }
         this->pages.at(page).rows.at(row).replace((size_t)column,(size_t)length, str);
     }
@@ -139,7 +156,6 @@ void Notebook::erase(int page, int row, int column, ariel::Direction direction, 
             {
                 string newRow(rowLength,'_');
                 this->pages.at(page).rows.insert({(size_t)row+i,newRow});
-                this->pages.at(page).numOfRows = this->pages.at(page).rows.size();
             }
             string tmp(1,str.at(i));
             this->pages.at(page).rows.at((size_t)row+i).replace((size_t)column,1,tmp);
@@ -149,6 +165,11 @@ void Notebook::erase(int page, int row, int column, ariel::Direction direction, 
 
 void Notebook::show(int index)
 {
+    // invalid argument received
+    if(index < 0)
+    {
+        throw invalid_argument("negative input cannot be processed");
+    }
     // find the min and max row
     Page& p = this->pages.at(index);
     int maxPage = 0;

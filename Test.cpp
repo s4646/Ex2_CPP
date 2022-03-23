@@ -143,7 +143,6 @@ TEST_CASE("ERASE")
     CHECK_NOTHROW(notebook.erase(1,8,0,Direction::Vertical,2));
     CHECK_NOTHROW(notebook.erase(1,18,0,Direction::Horizontal,4));
     CHECK_NOTHROW(notebook.erase(1,18,5,Direction::Horizontal,1));
-
 }
 /* GOOD INPUT */
 
@@ -161,6 +160,37 @@ TEST_CASE("WRITE")
     CHECK_THROWS(notebook.write(1,8,16,Direction::Vertical,"mvkf"));
     CHECK_THROWS(notebook.write(1,3,6,Direction::Vertical,"LOL"));
     CHECK_THROWS(notebook.write(1,8,0,Direction::Vertical,"Qw"));
+
+    /*negative input*/
+    CHECK_THROWS(notebook.write(-1,0,0,Direction::Horizontal,"abcd"));
+    CHECK_THROWS(notebook.write(1,-1,4,Direction::Horizontal,"fdsa"));
+    CHECK_THROWS(notebook.write(2,0,-1,Direction::Horizontal,"ab"));
+    CHECK_THROWS(notebook.write(-12,-3,-4,Direction::Horizontal,"W"));
+
+}
+
+TEST_CASE("READ")
+{
+    /*negative input*/
+    CHECK_THROWS(notebook.read(-1,0,0,Direction::Horizontal,4));
+    CHECK_THROWS(notebook.read(1,-1,4,Direction::Horizontal,4));
+    CHECK_THROWS(notebook.read(2,0,-1,Direction::Vertical,2));
+    CHECK_THROWS(notebook.read(-12,-3,-4,Direction::Vertical,1));
+}
+
+TEST_CASE("ERASE")
+{
+    /*exceeding*/
+    CHECK_THROWS(notebook.erase(1,4,99,Direction::Horizontal,4));
+    CHECK_THROWS(notebook.erase(1,8,98,Direction::Horizontal,4));
+    CHECK_THROWS(notebook.erase(1,3,201,Direction::Horizontal,3));
+    CHECK_THROWS(notebook.erase(1,8,100,Direction::Horizontal,2));
+
+    /*negative*/
+    CHECK_THROWS(notebook.erase(-1,0,0,Direction::Vertical,4));
+    CHECK_THROWS(notebook.erase(1,-1,4,Direction::Vertical,4));
+    CHECK_THROWS(notebook.erase(2,0,-1,Direction::Horizontal,2));
+    CHECK_THROWS(notebook.erase(-12,-3,-4,Direction::Horizontal,1));
 }
 /* BAD INPUT */
 
@@ -168,8 +198,8 @@ TEST_CASE("WRITE")
             ~~~~abcdabcdabcd
             a_~_____________
             b_~ab___________
-            c___abc_________
-            d____abc~_______
+            c____abc________
+            d_______~bcd____
             a_______________
             b_______________
             c_______________
@@ -202,7 +232,7 @@ TEST_CASE("WRITE")
             ________________!
             ________________@
             ________________#
-            ~~~~~___________$
+            ~~~~_~__________$
     */
     /* page 2
         _____0000_____________0000________7777777777777777/===================
@@ -215,8 +245,8 @@ TEST_CASE("WRITE")
         0000      0000___0000      0000___     7777___________________________
         _000      000_____000      000____    7777____________________________
         __000    000_______000    000_____  77777_____________________________
-        __00000000_________00000000______ 7777777_____________________________
-        ___ 0000_____________0000________777777777____________________________
+        ___00000000_________00000000______ 7777777_____________________________
+        ____ 0000_____________0000________777777777____________________________
     */
     /* page 3
         ___..eeeee..___

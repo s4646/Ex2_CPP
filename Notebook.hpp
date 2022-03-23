@@ -9,7 +9,7 @@ namespace ariel
     class Page
     {
         private:
-            int numOfRows;
+            // int numOfRows;
             std::unordered_map<int,std::string> rows;
 
         public:
@@ -21,7 +21,7 @@ namespace ariel
     class Notebook
     {
         private:
-            int numOfPages;
+            // int numOfPages;
             std::unordered_map<int,Page> pages;
 
         public:
