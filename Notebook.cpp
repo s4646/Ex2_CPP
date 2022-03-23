@@ -16,10 +16,10 @@ Page::Page() : numOfRows(0) {};
 Notebook::Notebook() : numOfPages(0) {};
 /* constructors */
 
-void Notebook::write(unsigned int page, unsigned int row, unsigned int column, ariel::Direction direction,const string& str)
+void Notebook::write(int page, int row, int column, ariel::Direction direction,const string& str)
 {
     // str exceeds the row's length
-    if(column+str.length()>rowLength && direction==Direction::Horizontal)
+    if((size_t)column+str.size()>rowLength)
     {
         throw "writing out of row's bounds";
     }
@@ -44,32 +44,32 @@ void Notebook::write(unsigned int page, unsigned int row, unsigned int column, a
         string emptyStr(str.length(),'_');
         
         // check that chars to write are not empty
-        if(p.rows.at(row).substr(column,str.length()) != emptyStr)
+        if(p.rows.at(row).substr((size_t)column,str.length()) != emptyStr)
         {
             throw "writing intersection";
         }
         // write horizontally
-        p.rows.at(row).replace(column,str.length(), str);
+        p.rows.at(row).replace((size_t)column,str.length(), str);
     }
     else
     {
-        unsigned int length = str.length();
+        int length = str.length();
         // check that chars to write are not empty
-        for (unsigned int i = 0; i < length; i++)
+        for (int i = 0; i < length; i++)
         {
             // row does not exist
             if(p.rows.find(row+i)==p.rows.end())
             {
                 continue;
             }
-            if(p.rows.at(row+i).at(column)!='_')
+            if(p.rows.at(row+i).at((size_t)column)!='_')
             {
                 // throw "writing intersection";
                 return;
             }
         }
         // write vertically
-        for (unsigned int i = 0; i < length; i++)
+        for (int i = 0; i < length; i++)
         {
             // row does not exist
             if(p.rows.find(row+i)==p.rows.end())
@@ -78,46 +78,46 @@ void Notebook::write(unsigned int page, unsigned int row, unsigned int column, a
                 p.rows.insert({row+i,newRow});
                 p.numOfRows = p.rows.size();
             }
-            string tmp(1,str.at(i));
-            p.rows.at(row+i).replace(column,1,tmp);
+            string tmp(1,str.at((size_t)i));
+            p.rows.at(row+i).replace((size_t)column,1,tmp);
         }
     }
 }
 
-string Notebook::read(unsigned int page, unsigned int row, unsigned int column, ariel::Direction direction, unsigned int length)
+string Notebook::read(int page, int row, int column, ariel::Direction direction, int length)
 {
     string final;
     Page& p = this->pages.at(page);
     if(direction==Direction::Horizontal)
     {
-        final += p.rows.at(row).substr(column, length);   
+        final += p.rows.at(row).substr((size_t)column, (size_t)length);  
     }
     else
     {
-        for (unsigned int i = 0; i < length; i++)
+        for (size_t i = 0; i < length; i++)
         {
             // row does not exist
-            if(p.rows.find(row+i)==p.rows.end())
+            if(p.rows.find((size_t)row+i)==p.rows.end())
             {
                 final += '_';
             }
             else
             {
-                final += p.rows.at(row+i).at(column);
+                final += p.rows.at((size_t)row+i).at((size_t)column);
             }
         }
     }
     return final;
 }
 
-void Notebook::erase(unsigned int page, unsigned int row, unsigned int column, ariel::Direction direction, unsigned int length)
+void Notebook::erase(int page, int row, int column, ariel::Direction direction, int length)
 {
     // str exceeds the row's length
-    if(column+length>rowLength && direction==Direction::Horizontal)
+    if((size_t)column+(size_t)length>rowLength && direction==Direction::Horizontal)
     {
         throw "erasing out of row's bounds";
     }
-    string str(length,'~');
+    string str((size_t)length,'~');
     if(direction==Direction::Horizontal)
     {
             // row does not exist
@@ -127,32 +127,32 @@ void Notebook::erase(unsigned int page, unsigned int row, unsigned int column, a
                 this->pages.at(page).rows.insert({row,newRow});
                 this->pages.at(page).numOfRows = this->pages.at(page).rows.size();
             }
-        this->pages.at(page).rows.at(row).replace(column,length, str);
+        this->pages.at(page).rows.at(row).replace((size_t)column,(size_t)length, str);
     }
     else
     {
-        unsigned int length = str.length();
-        for (unsigned int i = 0; i < length; i++)
+        int length = str.length();
+        for (size_t i = 0; i < length; i++)
         {
             // row does not exist
-            if(this->pages.at(page).rows.find(row+i) == this->pages.at(page).rows.end())
+            if(this->pages.at(page).rows.find((size_t)row+i) == this->pages.at(page).rows.end())
             {
                 string newRow(rowLength,'_');
-                this->pages.at(page).rows.insert({row+i,newRow});
+                this->pages.at(page).rows.insert({(size_t)row+i,newRow});
                 this->pages.at(page).numOfRows = this->pages.at(page).rows.size();
             }
             string tmp(1,str.at(i));
-            this->pages.at(page).rows.at(row+i).replace(column,1,tmp);
+            this->pages.at(page).rows.at((size_t)row+i).replace((size_t)column,1,tmp);
         }
     }
 }
 
-void Notebook::show(unsigned int index)
+void Notebook::show(int index)
 {
     // find the min and max row
     Page& p = this->pages.at(index);
-    unsigned int maxPage = 0;
-    unsigned int minPage = UINT32_MAX;
+    int maxPage = 0;
+    int minPage = INT32_MAX;
     for (const auto& Pair : p.rows)
     {
         if(maxPage < Pair.first)
@@ -165,7 +165,7 @@ void Notebook::show(unsigned int index)
         }
     }
     string final;
-    for (unsigned int i = minPage; i < maxPage + 1; i++)
+    for (int i = minPage; i < maxPage + 1; i++)
     {
         // row does not exist or empty page
         if(p.rows.find(i) == p.rows.end())

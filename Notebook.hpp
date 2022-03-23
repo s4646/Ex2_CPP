@@ -5,12 +5,12 @@
 
 namespace ariel
 {
-    const unsigned int rowLength = 100;
+    const int rowLength = 100;
     class Page
     {
         private:
-            unsigned int numOfRows;
-            std::unordered_map<unsigned int,std::string> rows;
+            int numOfRows;
+            std::unordered_map<int,std::string> rows;
 
         public:
             Page();
@@ -21,14 +21,14 @@ namespace ariel
     class Notebook
     {
         private:
-            unsigned int numOfPages;
-            std::unordered_map<unsigned int,Page> pages;
+            int numOfPages;
+            std::unordered_map<int,Page> pages;
 
         public:
             Notebook();
-            void write(unsigned int page, unsigned int row, unsigned int column, Direction direction, const std::string& str);
-            std::string read(unsigned int page, unsigned int row, unsigned int column, Direction direction, unsigned int length);
-            void erase(unsigned int page, unsigned int row, unsigned int column, Direction direction, unsigned int length);
-            void show(unsigned int index);
+            void write(int page, int row, int column, Direction direction, const std::string& str);
+            std::string read(int page, int row, int column, Direction direction, int length);
+            void erase(int page, int row, int column, Direction direction, int length);
+            void show(int index);
     };
 }
