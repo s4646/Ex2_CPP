@@ -2,26 +2,23 @@
 #include <unordered_map>
 #include <string>
 #include "Direction.hpp"
+#define rowLength 100
 
 namespace ariel
 {
-    const int rowLength = 100;
     class Page
     {
         private:
-            // int numOfRows;
             std::unordered_map<int,std::string> rows;
 
         public:
             Page();
-            
             friend class Notebook;
     };
 
     class Notebook
     {
         private:
-            // int numOfPages;
             std::unordered_map<int,Page> pages;
 
         public:
