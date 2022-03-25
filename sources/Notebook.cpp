@@ -9,14 +9,17 @@
 using namespace std;
 using namespace ariel;
 
-
-
 /* constructors */
 Page::Page() {};
 
 Notebook::Notebook() {};
 /* constructors */
 
+/*  write:
+    receives page, row, column, direction and string as input.
+    writes chars in the page at the row, column and the string's length boundaries.
+    writing is performed in the given direction. 
+*/
 void Notebook::write(int page, int row, int column, ariel::Direction direction,const string& str)
 {
     // invalid argument received
@@ -68,8 +71,7 @@ void Notebook::write(int page, int row, int column, ariel::Direction direction,c
             }
             if(p.rows.at(row+i).at((size_t)column)!='_')
             {
-                throw "writing intersection";
-                // return;
+                throw runtime_error("writing intersection");
             }
         }
         // write vertically
@@ -86,7 +88,11 @@ void Notebook::write(int page, int row, int column, ariel::Direction direction,c
         }
     }
 }
-
+/*  read:
+    receives page, row, column, direction and length as input.
+    reads chars that are written in the page at the row, column and length boundaries.
+    reading is performed in the given direction. 
+*/
 string Notebook::read(int page, int row, int column, ariel::Direction direction, int length)
 {
     // invalid argument received
@@ -122,7 +128,11 @@ string Notebook::read(int page, int row, int column, ariel::Direction direction,
     }
     return final;
 }
-
+/*  erase:
+    receives page, row, column, direction and length as input.
+    erases chars that are written in the page at the row, column and length boundaries.
+    erasing is performed in the given direction. 
+*/
 void Notebook::erase(int page, int row, int column, ariel::Direction direction, int length)
 {
     // invalid argument received
@@ -133,7 +143,7 @@ void Notebook::erase(int page, int row, int column, ariel::Direction direction, 
     // str exceeds the row's length
     if((size_t)column+(size_t)length>rowLength && direction==Direction::Horizontal)
     {
-        throw "erasing out of row's bounds";
+        throw invalid_argument("erasing out of row's bounds");
     }
     string str((size_t)length,'~');
     if(direction==Direction::Horizontal)
@@ -162,7 +172,10 @@ void Notebook::erase(int page, int row, int column, ariel::Direction direction, 
         }
     }
 }
-
+/*  show:
+    reveices index of a page as input.
+    prints the page associated to that index.
+*/
 void Notebook::show(int index)
 {
     // invalid argument received
@@ -184,6 +197,11 @@ void Notebook::show(int index)
         {
             minPage = Pair.first;
         }
+    }
+    // prevent min>max
+    if(minPage == INT32_MAX)
+    {
+        minPage = maxPage;
     }
     string final;
     for (int i = minPage; i < maxPage + 1; i++)
