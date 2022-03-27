@@ -38,7 +38,7 @@ void Notebook::write(int page, int row, int column, ariel::Direction direction,c
     cout << "WRITE " << "page: " << page << " row: " << row << " column: " << column << " string's length: " << str.length() << endl;
     stringValidation(str);
     // invalid argument received
-    if(page < 0 || row < 0 || column < 0 || column > 99)
+    if(page < 0 || row < 0 || column < 0 || column > rowLength-1)
     {
         throw invalid_argument("input is out of bounds");
     }
@@ -112,7 +112,7 @@ string Notebook::read(int page, int row, int column, ariel::Direction direction,
 {
     cout << "READ " << "page: " << page << " row: " << row << " column: " << column << " string's length: " << length << endl;
     // invalid argument received
-    if(page < 0 || row < 0 || column < 0 || column > 99 || length < 0)
+    if(page < 0 || row < 0 || column < 0 || column > rowLength-1 || length < 0)
     {
         throw invalid_argument("input is out of bounds");
     }
@@ -168,7 +168,7 @@ void Notebook::erase(int page, int row, int column, ariel::Direction direction, 
 {
     cout << "ERASE " << "page: " << page << " row: " << row << " column: " << column << " string's length: " << length << endl;
     // invalid argument received
-    if(page < 0 || row < 0 || column < 0 || column > 99 || length < 0)
+    if(page < 0 || row < 0 || column < 0 || column > rowLength-1 || length < 0)
     {
         throw invalid_argument("inputis out of bounds");
     }
