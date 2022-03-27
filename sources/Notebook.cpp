@@ -35,7 +35,6 @@ void stringValidation(const string& str)
 */
 void Notebook::write(int page, int row, int column, ariel::Direction direction,const string& str)
 {
-    cout << "WRITE " << "page: " << page << " row: " << row << " column: " << column << " string's length: " << str.length() << endl;
     stringValidation(str);
     // invalid argument received
     if(page < 0 || row < 0 || column < 0 || column > rowLength-1)
@@ -110,7 +109,6 @@ void Notebook::write(int page, int row, int column, ariel::Direction direction,c
 */
 string Notebook::read(int page, int row, int column, ariel::Direction direction, int length)
 {
-    cout << "READ " << "page: " << page << " row: " << row << " column: " << column << " string's length: " << length << endl;
     // invalid argument received
     if(page < 0 || row < 0 || column < 0 || column > rowLength-1 || length < 0)
     {
@@ -166,7 +164,6 @@ string Notebook::read(int page, int row, int column, ariel::Direction direction,
 */
 void Notebook::erase(int page, int row, int column, ariel::Direction direction, int length)
 {
-    cout << "ERASE " << "page: " << page << " row: " << row << " column: " << column << " string's length: " << length << endl;
     // invalid argument received
     if(page < 0 || row < 0 || column < 0 || column > rowLength-1 || length < 0)
     {
