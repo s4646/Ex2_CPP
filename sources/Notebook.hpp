@@ -13,6 +13,7 @@ namespace ariel
 
         public:
             Page();
+            ~Page();
             friend class Notebook;
     };
 
@@ -23,6 +24,7 @@ namespace ariel
 
         public:
             Notebook();
+            ~Notebook();
             void write(int page, int row, int column, Direction direction, const std::string& str);
             std::string read(int page, int row, int column, Direction direction, int length);
             void erase(int page, int row, int column, Direction direction, int length);

@@ -9,11 +9,24 @@
 using namespace std;
 using namespace ariel;
 
-/* constructors */
+/* constructors & destructors */
 Page::Page() {};
-
+Page::~Page() {};
 Notebook::Notebook() {};
-/* constructors */
+Notebook::~Notebook() {};
+/* constructors & destructors */
+
+void stringValidation(const string& str)
+{
+    for (size_t i = 0; i < str.length(); i++)
+    {
+        char tmp = str.at(i);
+        if(tmp < ' ' || tmp > '}')
+        {
+             throw invalid_argument("unprintable char detected");
+        }
+    }
+}
 
 /*  write:
     receives page, row, column, direction and string as input.
@@ -22,13 +35,15 @@ Notebook::Notebook() {};
 */
 void Notebook::write(int page, int row, int column, ariel::Direction direction,const string& str)
 {
+    cout << "WRITE " << "page: " << page << " row: " << row << " column: " << column << " string's length: " << str.length() << endl;
+    stringValidation(str);
     // invalid argument received
-    if(page < 0 || row < 0 || column < 0)
+    if(page < 0 || row < 0 || column < 0 || column > 99)
     {
-        throw invalid_argument("negative input cannot be processed");
+        throw invalid_argument("input is out of bounds");
     }
     // str exceeds the row's length
-    if((size_t)column+str.size()>rowLength && direction==Direction::Horizontal)
+    if((size_t)column+str.length()>rowLength && direction==Direction::Horizontal)
     {
         throw runtime_error("writing out of row's bounds");
     }
@@ -95,10 +110,11 @@ void Notebook::write(int page, int row, int column, ariel::Direction direction,c
 */
 string Notebook::read(int page, int row, int column, ariel::Direction direction, int length)
 {
+    cout << "READ " << "page: " << page << " row: " << row << " column: " << column << " string's length: " << length << endl;
     // invalid argument received
-    if(page < 0 || row < 0 || column < 0)
+    if(page < 0 || row < 0 || column < 0 || column > 99 || length < 0)
     {
-        throw invalid_argument("negative input cannot be processed");
+        throw invalid_argument("input is out of bounds");
     }
     // str exceeds the row's length
     if((size_t)column+(size_t)length>rowLength && direction==Direction::Horizontal)
@@ -106,10 +122,25 @@ string Notebook::read(int page, int row, int column, ariel::Direction direction,
         throw runtime_error("reading out of row's bounds");
     }
     string final;
+    // page does not exist
+    if(this->pages.find(page)==this->pages.end())
+    {
+        Page newPage;
+        this->pages.insert({page,newPage});
+    }
     Page& p = this->pages.at(page);
     if(direction==Direction::Horizontal)
     {
-        final += p.rows.at(row).substr((size_t)column, (size_t)length);  
+        // row does not exist
+        if(p.rows.find((size_t)row)==p.rows.end())
+        {
+            string tmp((size_t)length, '_');
+            final += tmp;
+        }
+        else
+        {
+            final += p.rows.at(row).substr((size_t)column, (size_t)length);  
+        }
     }
     else
     {
@@ -135,10 +166,11 @@ string Notebook::read(int page, int row, int column, ariel::Direction direction,
 */
 void Notebook::erase(int page, int row, int column, ariel::Direction direction, int length)
 {
+    cout << "ERASE " << "page: " << page << " row: " << row << " column: " << column << " string's length: " << length << endl;
     // invalid argument received
-    if(page < 0 || row < 0 || column < 0)
+    if(page < 0 || row < 0 || column < 0 || column > 99 || length < 0)
     {
-        throw invalid_argument("negative input cannot be processed");
+        throw invalid_argument("inputis out of bounds");
     }
     // str exceeds the row's length
     if((size_t)column+(size_t)length>rowLength && direction==Direction::Horizontal)
@@ -146,15 +178,22 @@ void Notebook::erase(int page, int row, int column, ariel::Direction direction, 
         throw invalid_argument("erasing out of row's bounds");
     }
     string str((size_t)length,'~');
+    // page does not exist
+    if(this->pages.find(page)==this->pages.end())
+    {
+        Page newPage;
+        this->pages.insert({page,newPage});
+    }
+    Page& p = this->pages.at(page);
     if(direction==Direction::Horizontal)
     {
             // row does not exist
-            if(this->pages.at(page).rows.find(row) == this->pages.at(page).rows.end())
+            if(p.rows.find(row) == p.rows.end())
             {
                 string newRow(rowLength,'_');
-                this->pages.at(page).rows.insert({row,newRow});
+                p.rows.insert({row,newRow});
             }
-        this->pages.at(page).rows.at(row).replace((size_t)column,(size_t)length, str);
+        p.rows.at(row).replace((size_t)column,(size_t)length, str);
     }
     else
     {
@@ -162,13 +201,13 @@ void Notebook::erase(int page, int row, int column, ariel::Direction direction, 
         for (size_t i = 0; i < length; i++)
         {
             // row does not exist
-            if(this->pages.at(page).rows.find((size_t)row+i) == this->pages.at(page).rows.end())
+            if(p.rows.find((size_t)row+i) == p.rows.end())
             {
                 string newRow(rowLength,'_');
-                this->pages.at(page).rows.insert({(size_t)row+i,newRow});
+                p.rows.insert({(size_t)row+i,newRow});
             }
             string tmp(1,str.at(i));
-            this->pages.at(page).rows.at((size_t)row+i).replace((size_t)column,1,tmp);
+            p.rows.at((size_t)row+i).replace((size_t)column,1,tmp);
         }
     }
 }
@@ -181,7 +220,13 @@ void Notebook::show(int index)
     // invalid argument received
     if(index < 0)
     {
-        throw invalid_argument("negative input cannot be processed");
+        throw invalid_argument("input is out of bounds");
+    }
+    // page does not exist
+    if(this->pages.find(index)==this->pages.end())
+    {
+        Page newPage;
+        this->pages.insert({index,newPage});
     }
     // find the min and max row
     Page& p = this->pages.at(index);
